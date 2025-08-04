@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:KickbackKingdomLauncher.ViewModels.Pages"
+             xmlns:models="clr-namespace:KickbackKingdomLauncher.Models.Software"
+             x:Class="KickbackKingdomLauncher.Views.Pages.GroupSoftwarePageView"
+             x:DataType="vm:GroupSoftwarePageViewModel">
+
+	<StackPanel>
+		<TextBlock Text="{Binding GroupTitle}" FontSize="20" Foreground="White" Margin="0,0,0,16"/>
+
+		<ItemsControl ItemsSource="{Binding GroupSoftware}">
+			<ItemsControl.ItemTemplate>
+				<DataTemplate x:DataType="models:SoftwareEntry">
+					<TextBlock Text="{Binding Title}" Padding="4"/>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</StackPanel>
+</UserControl>

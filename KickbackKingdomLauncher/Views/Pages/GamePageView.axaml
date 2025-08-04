@@ -1,0 +1,28 @@
+﻿<UserControl
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  x:Class="KickbackKingdomLauncher.Views.Pages.GamePageView"
+  xmlns:vm="clr-namespace:KickbackKingdomLauncher.ViewModels.Pages"
+  x:DataType="vm:GamePageViewModel">
+
+	<Border Background="#2d3046" CornerRadius="10" Padding="20">
+		<StackPanel>
+			<TextBlock Text="{Binding Title}" FontSize="24" FontWeight="Bold" Foreground="#F5C76A"/>
+			<TextBlock Text="{Binding BuildVersion, StringFormat='Build {0}'}"
+           Foreground="#AAAAAA"
+           Margin="0,4,0,12"
+           IsVisible="{Binding BuildVersion, Converter={StaticResource NotNullConverter}}"/>
+
+			<TextBlock Text="{Binding Description}" Foreground="#dddddd" TextWrapping="Wrap"/>
+
+			<Button Content="Install"
+					IsVisible="{Binding NotInstalled}"
+					Click="OnInstallClicked"/>
+
+
+			<Button Content="Play"
+					IsVisible="{Binding IsInstalled}" />
+
+		</StackPanel>
+	</Border>
+</UserControl>

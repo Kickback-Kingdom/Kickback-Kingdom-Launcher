@@ -1,0 +1,180 @@
+<Window
+  x:Name="RootWindow"
+
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:views="clr-namespace:KickbackKingdomLauncher.Views"
+  xmlns:vm="clr-namespace:KickbackKingdomLauncher.ViewModels.Windows"
+  xmlns:software="clr-namespace:KickbackKingdomLauncher.ViewModels.Software;assembly=KickbackKingdomLauncher"
+  x:Class="KickbackKingdomLauncher.Views.MainWindow"
+  x:DataType="vm:MainViewModel"
+  Title="Kickback Kingdom Launcher"
+  Width="1000" Height="600"
+  Icon="/Assets/avalonia-logo.ico"
+  Background="#1a1a2e">
+
+
+
+
+	<DockPanel LastChildFill="True">
+
+		<!-- Clickable Footer Docked to Bottom -->
+		<Border Background="#1b1d2b"
+        Height="40"
+        DockPanel.Dock="Bottom"
+        IsVisible="{Binding TaskManager.HasActiveTasks}"
+		PointerPressed="OnFooterClicked">
+
+			<Grid ColumnDefinitions="Auto,*,Auto"
+				  VerticalAlignment="Center"
+				  Margin="12,0">
+
+				<!-- Left Label -->
+				<TextBlock Text="{Binding TaskManager.ActiveTaskTypeLabel}"
+						   Foreground="#dddddd"
+						   FontWeight="Bold"
+						   VerticalAlignment="Center"
+						   Margin="0,0,12,0"/>
+
+				<!-- Center Progress + % -->
+				<Grid Grid.Column="1">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*"/>
+						<ColumnDefinition Width="Auto"/>
+					</Grid.ColumnDefinitions>
+
+					<ProgressBar Grid.Column="0"
+								 Minimum="0"
+								 Maximum="100"
+								 Value="{Binding TaskManager.CombinedProgress}"
+								 Height="12"
+								 VerticalAlignment="Center"
+								 Foreground="#F5C76A"
+								 Background="#2b2d42"/>
+
+					<TextBlock Grid.Column="1"
+							   Text="{Binding TaskManager.CombinedProgress, StringFormat='{}{0:F0}%'}"
+							   Foreground="White"
+							   VerticalAlignment="Center"
+							   Margin="12,0,0,0"/>
+				</Grid>
+
+				<!-- Right Task Count -->
+				<TextBlock Grid.Column="2"
+						   Text="{Binding TaskManager.ActiveTasks.Count, StringFormat='Task(s): {0}'}"
+						   Foreground="#aaaaaa"
+						   FontSize="12"
+						   VerticalAlignment="Center"
+						   Margin="12,0,0,0"/>
+			</Grid>
+		</Border>
+
+
+
+
+
+
+
+
+
+		<!-- Top Navigation Bar -->
+		<Border Background="#1b1d2b" Height="36" DockPanel.Dock="Top">
+			<Grid ColumnDefinitions="Auto,Auto,*,Auto">
+				<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0">
+					<TextBlock Text="STORE" Margin="0,0,16,0" Foreground="#dddddd" FontWeight="Bold"/>
+					<TextBlock Text="LIBRARY" Margin="0,0,16,0" Foreground="#F5C76A" FontWeight="Bold"/>
+					<TextBlock Text="COMMUNITY" Margin="0,0,16,0" Foreground="#dddddd" FontWeight="Bold"/>
+				</StackPanel>
+
+				<TextBlock Text="KICKBACK KINGDOM" HorizontalAlignment="Center" VerticalAlignment="Center"
+						   FontWeight="Bold" FontSize="16" Foreground="#bbbbbb" Grid.Column="2"/>
+
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="3" Margin="0,0,12,0">
+					<Ellipse Width="24" Height="24" Fill="#888" Margin="0,0,8,0"/>
+					<TextBlock Text="Atlas" Foreground="#ffffff" VerticalAlignment="Center"/>
+				</StackPanel>
+			</Grid>
+		</Border>
+
+		<!-- Left Sidebar Library -->
+		<StackPanel DockPanel.Dock="Left" Width="240" Background="#1f2133">
+			<!-- Header -->
+			<TextBlock Text="LIBRARY" FontSize="18" FontWeight="Bold" Foreground="#F5C76A" Margin="16,16,0,8"/>
+
+			<!-- Game Filter -->
+			<TextBox Watermark="Search games..." Margin="12,0,12,8" Padding="6" Background="#2b2d42" Foreground="White" BorderBrush="#3c3e56"/>
+
+			<!-- Scrollable Game List -->
+			<ScrollViewer Margin="0,0,0,12">
+				<StackPanel>
+
+					<ListBox ItemsSource="{Binding GroupedSoftwareFlat}"
+							 SelectedItem="{Binding SelectedListItem}"
+							 BorderThickness="0"
+							 Background="Transparent"
+							 Margin="12,2,12,12">
+
+						<ListBox.Styles>
+							<!-- Group header item style (non-interactive) -->
+
+
+
+							<!-- Selected item text -->
+							<Style Selector="ListBoxItem:selected TextBlock">
+								<Setter Property="Foreground" Value="#F5C76A"/>
+							</Style>
+
+							<!-- All ListBoxItems -->
+							<Style Selector="ListBoxItem">
+								<Setter Property="Padding" Value="0"/>
+								<Setter Property="Background" Value="Transparent"/>
+								<Setter Property="BorderThickness" Value="0"/>
+							</Style>
+
+							<!-- Hover highlight -->
+							<Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+								<Setter Property="Background" Value="#2e3355"/>
+							</Style>
+						</ListBox.Styles>
+
+
+					</ListBox>
+
+
+
+
+
+
+				</StackPanel>
+			</ScrollViewer>
+
+			<!-- Footer Controls -->
+			<StackPanel Margin="12,0" Orientation="Vertical">
+				<Separator Margin="0,8"/>
+				<Button Content="Patch Notes" Margin="0,4" Padding="6"/>
+				<Button Content="Exit" Margin="0,4" Padding="6"/>
+			</StackPanel>
+		</StackPanel>
+
+
+		<!-- Main Content Area -->
+		<Grid Margin="24">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<!-- Main Dynamic Page -->
+			<ContentControl Grid.Row="0" Grid.RowSpan="2"
+							Content="{Binding CurrentPage}" />
+		</Grid>
+
+
+
+
+
+
+
+
+	</DockPanel>
+</Window>

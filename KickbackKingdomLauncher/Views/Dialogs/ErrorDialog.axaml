@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:KickbackKingdomLauncher.ViewModels.Dialogs"
+        x:Class="KickbackKingdomLauncher.Views.ErrorDialog"
+        x:DataType="vm:ErrorDialogViewModel"
+        Width="500" Height="350"
+        Title="An Error Occurred"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+	<StackPanel Margin="20" Spacing="10">
+		<TextBlock Text="{Binding Message}" FontWeight="Bold" FontSize="16" Foreground="Red" TextWrapping="Wrap"/>
+
+		<Expander Header="View Details" IsExpanded="False">
+			<ScrollViewer Height="150">
+				<TextBlock Text="{Binding Details}" FontFamily="Consolas" FontSize="12" TextWrapping="Wrap"/>
+			</ScrollViewer>
+		</Expander>
+
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+			<Button Content="Copy" Command="{Binding CopyToClipboardCommand}" />
+			<Button Content="Close" IsDefault="True" IsCancel="True" />
+		</StackPanel>
+	</StackPanel>
+</Window>

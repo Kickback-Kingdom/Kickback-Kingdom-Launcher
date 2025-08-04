@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KickbackKingdomLauncher", "KickbackKingdomLauncher\KickbackKingdomLauncher.csproj", "{F46295B0-82A9-47D8-986D-334E0CD35E8B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KickbackKingdomLauncher.Desktop", "KickbackKingdomLauncher.Desktop\KickbackKingdomLauncher.Desktop.csproj", "{1F927303-1994-4716-98C1-422D45AB3353}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F46295B0-82A9-47D8-986D-334E0CD35E8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F46295B0-82A9-47D8-986D-334E0CD35E8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F46295B0-82A9-47D8-986D-334E0CD35E8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F46295B0-82A9-47D8-986D-334E0CD35E8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F927303-1994-4716-98C1-422D45AB3353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F927303-1994-4716-98C1-422D45AB3353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F927303-1994-4716-98C1-422D45AB3353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F927303-1994-4716-98C1-422D45AB3353}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F8EE6FE0-01CD-4DAF-A276-EC6C48B25F76}
+	EndGlobalSection
+EndGlobal
