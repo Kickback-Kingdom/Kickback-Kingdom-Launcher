@@ -2,6 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using KickbackKingdomLauncher.Models.Vault;
 using KickbackKingdomLauncher.ViewModels;
 using KickbackKingdomLauncher.ViewModels.Dialogs;
 using KickbackKingdomLauncher.ViewModels.Windows;
@@ -37,6 +38,22 @@ public partial class App : Application
             catch (Exception ex)
             {
                 earlyException = ex;
+            }
+
+            // Initialize Vaults
+            VaultManager.Instance.LoadVaults();
+
+            if (!VaultManager.Instance.HasVaults)
+            {
+                string path = VaultManager.GetDefaultVaultPath();
+
+                var vault = new VaultInfo
+                {
+                    Name = "Main Vault",
+                    Path = path
+                };
+
+                VaultManager.Instance.AddVault(vault, setAsDefault: true);
             }
 
             // Set up UI-level error handling

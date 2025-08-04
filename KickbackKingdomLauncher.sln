@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KickbackKingdomLauncher", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KickbackKingdomLauncher.Desktop", "KickbackKingdomLauncher.Desktop\KickbackKingdomLauncher.Desktop.csproj", "{1F927303-1994-4716-98C1-422D45AB3353}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KickbackKingdom.API", "KickbackKingdom.Api\KickbackKingdom.API.csproj", "{AA7390C0-50A0-4F97-9567-5B74AE263A67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{1F927303-1994-4716-98C1-422D45AB3353}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F927303-1994-4716-98C1-422D45AB3353}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F927303-1994-4716-98C1-422D45AB3353}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA7390C0-50A0-4F97-9567-5B74AE263A67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA7390C0-50A0-4F97-9567-5B74AE263A67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA7390C0-50A0-4F97-9567-5B74AE263A67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA7390C0-50A0-4F97-9567-5B74AE263A67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

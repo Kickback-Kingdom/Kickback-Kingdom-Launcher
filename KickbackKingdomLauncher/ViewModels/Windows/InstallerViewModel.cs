@@ -1,10 +1,13 @@
 ﻿using KickbackKingdomLauncher.Helpers;
 using KickbackKingdomLauncher.Models.Software;
 using KickbackKingdomLauncher.Models.Tasks;
+using KickbackKingdomLauncher.Models.Vault;
 using KickbackKingdomLauncher.Services;
 using ReactiveUI;
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -15,13 +18,47 @@ public class InstallerViewModel : ReactiveObject
 {
     public SoftwareEntry Software { get; set; }
 
-    private string _installPath = "C:\\Program Files\\Kickback Kingdom";
-    private long _requiredSpace = 5L * 1024 * 1024 * 1024; // 5 GB
+    private string _installPath = "";
+    private long _requiredSpace = 0L;
     private long _availableSpace;
+    public ObservableCollection<VaultInfo> Vaults { get; }
+    private VaultInfo? _selectedVault;
+
+    public VaultInfo? SelectedVault
+    {
+        get => _selectedVault;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _selectedVault, value);
+            UpdateInstallPathFromVault();
+        }
+    }
+    private void UpdateInstallPathFromVault()
+    {
+        if (SelectedVault != null)
+        {
+            // Install into a subdirectory of the vault, based on game name or ID
+            InstallPath = Path.Combine(SelectedVault.Path, Software.Title); // customize this if needed
+        }
+        else
+        {
+            InstallPath = "";
+        }
+    }
+    public void RefreshVaults()
+    {
+        Vaults.Clear();
+        foreach (var v in VaultManager.Instance.ValidVaults)
+            Vaults.Add(v);
+    }
 
     public InstallerViewModel(SoftwareEntry software)
     {
         Software = software;
+        Vaults = new ObservableCollection<VaultInfo>();
+        RefreshVaults();
+
+        SelectedVault = VaultManager.Instance.DefaultVault ?? Vaults.FirstOrDefault();
 
         TriggerPickFolderCommand = ReactiveCommand.CreateFromTask(async () =>
         {
@@ -98,6 +135,7 @@ public class InstallerViewModel : ReactiveObject
     }
 
     public bool HasEnoughSpace => AvailableSpace >= RequiredSpace;
+    public bool CanInstall => HasEnoughSpace && !string.IsNullOrWhiteSpace(InstallPath);
 
     public string TotalSpaceFormatted => GetDrive()?.TotalSize is long t ? $"Total: {FormatSize(t)}" : "Total: N/A";
     public string FreeSpaceFormatted => $"Free: {FormatSize(AvailableSpace)}";
