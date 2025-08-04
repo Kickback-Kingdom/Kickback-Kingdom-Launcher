@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 
-namespace KickbackKingdomLauncher.Views;
+namespace KickbackKingdomLauncher.Views.Windows;
 
 public partial class InstallerWindow : ReactiveWindow<InstallerViewModel>
 {

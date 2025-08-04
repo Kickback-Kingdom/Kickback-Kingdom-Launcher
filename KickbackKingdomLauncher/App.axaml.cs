@@ -2,11 +2,13 @@
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using KickbackKingdom.API.Core;
 using KickbackKingdomLauncher.Models.Vault;
 using KickbackKingdomLauncher.ViewModels;
 using KickbackKingdomLauncher.ViewModels.Dialogs;
 using KickbackKingdomLauncher.ViewModels.Windows;
 using KickbackKingdomLauncher.Views;
+using KickbackKingdomLauncher.Views.Windows;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,39 +26,65 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var window = new MainWindow();
-            desktop.MainWindow = window;
-
             Exception? earlyException = null;
 
             try
             {
-                // Try building the DataContext
-                var viewModel = new MainViewModel();
-                window.DataContext = viewModel;
+                // Always load vaults early
+                VaultManager.Instance.LoadVaults();
+
+                if (!VaultManager.Instance.HasVaults)
+                {
+                    string path = VaultManager.GetDefaultVaultPath();
+
+                    var vault = new VaultInfo
+                    {
+                        Name = "Main Vault",
+                        Path = path
+                    };
+
+                    VaultManager.Instance.AddVault(vault, setAsDefault: true);
+                }
+
+                // Load session (from KickbackKingdom.API)
+                SessionManager.Load();
+
+                if (SessionManager.IsLoggedIn())
+                {
+                    // User is logged in — go straight to MainWindow
+                    var mainWindow = new MainWindow();
+
+                    desktop.MainWindow = mainWindow;
+                    mainWindow.Show();
+                }
+                else
+                {
+                    // User is not logged in — show LoginWindow first
+                    var loginWindow = new LoginWindow();
+                    var loginVM = new LoginViewModel();
+
+                    loginWindow.DataContext = loginVM;
+
+                    loginVM.OnLoginSuccess += account =>
+                    {
+                        SessionManager.Save(account);
+
+                        var mainWindow = new MainWindow();
+
+                        loginWindow.Close();
+                        desktop.MainWindow = mainWindow;
+                        mainWindow.Show();
+                    };
+
+                    loginWindow.Show();
+                }
             }
             catch (Exception ex)
             {
                 earlyException = ex;
             }
 
-            // Initialize Vaults
-            VaultManager.Instance.LoadVaults();
-
-            if (!VaultManager.Instance.HasVaults)
-            {
-                string path = VaultManager.GetDefaultVaultPath();
-
-                var vault = new VaultInfo
-                {
-                    Name = "Main Vault",
-                    Path = path
-                };
-
-                VaultManager.Instance.AddVault(vault, setAsDefault: true);
-            }
-
-            // Set up UI-level error handling
+            // Set up global error handlers
             SynchronizationContext.SetSynchronizationContext(new UIExceptionCatchingSyncContext());
 
             AppDomain.CurrentDomain.UnhandledException += (_, e) =>
@@ -75,24 +103,31 @@ public partial class App : Application
 
             if (earlyException != null)
             {
-                // Defer the dialog until window is fully loaded
                 Avalonia.Threading.Dispatcher.UIThread.Post(async () =>
                 {
-                    await ShowErrorAsync(window, earlyException);
+                    if (desktop.MainWindow?.IsVisible == true)
+                        await ShowErrorAsync(desktop.MainWindow, earlyException);
+                    else
+                        await ShowErrorAsync(null, earlyException);
                 });
             }
         }
     }
 
 
+
     /// <summary>
     /// Display an error dialog from an exception using the MainWindow as parent.
     /// </summary>
-    public static async Task ShowErrorAsync(Window parent, Exception ex)
+    public static async Task ShowErrorAsync(Window? parent, Exception ex)
     {
-        var clipboard = parent.Clipboard;
+        var clipboard = parent?.Clipboard ?? TopLevel.GetTopLevel(parent)?.Clipboard;
+
         if (clipboard is null)
-            throw new InvalidOperationException("Clipboard not available on this window.");
+        {
+            Console.Error.WriteLine("Clipboard not available.");
+            return;
+        }
 
         var dialog = new ErrorDialog
         {
@@ -103,8 +138,12 @@ public partial class App : Application
             )
         };
 
-        await dialog.ShowDialog(parent);
+        if (parent is { IsVisible: true })
+            await dialog.ShowDialog(parent);
+        else
+            dialog.Show();
     }
+
 
     /// <summary>
     /// Helper for global exception hooks to get the top-level window and show the error.

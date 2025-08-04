@@ -1,0 +1,60 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="KickbackKingdomLauncher.Views.Controls.TitleBar"
+    Height="40"
+    HorizontalAlignment="Stretch">
+
+	<Border Background="{DynamicResource PanelBackgroundBrush}"
+            Height="40"
+            HorizontalAlignment="Stretch"
+            PointerPressed="OnDragWindow">
+
+		<DockPanel VerticalAlignment="Center" LastChildFill="True" Margin="0">
+
+			<!-- Left: Logo and Title -->
+			<StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Margin="12,0,0,0">
+				<Image Source="/Assets/logo-kk.png"
+                       Width="24"
+                       Height="24"
+                       Margin="0,0,8,0"/>
+				<TextBlock Text="Kickback Kingdom Launcher"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource AccentTextBrush}"
+                           FontSize="14"
+                           VerticalAlignment="Center"/>
+			</StackPanel>
+
+			<!-- Right: Window Controls -->
+			<StackPanel Orientation="Horizontal"
+                        DockPanel.Dock="Right"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right"
+                        Margin="0,0,4,0"
+                        Spacing="2">
+				<Button Classes="TitleBarButton"
+                        Width="36" Height="36"
+                        FontSize="16"
+                        ToolTip.Tip="Minimize"
+                        Click="OnMinimizeClicked"
+                        Content="–" />
+				<Button Classes="TitleBarButton"
+                        Width="36" Height="36"
+                        FontSize="16"
+                        ToolTip.Tip="Maximize"
+                        Click="OnToggleMaximizeClicked"
+                        Content="▢" />
+				<Button Classes="TitleBarButton Close"
+                        Width="36" Height="36"
+                        FontSize="16"
+                        ToolTip.Tip="Close"
+                        Click="OnCloseClicked"
+                        Content="✕" />
+			</StackPanel>
+
+		</DockPanel>
+	</Border>
+</UserControl>

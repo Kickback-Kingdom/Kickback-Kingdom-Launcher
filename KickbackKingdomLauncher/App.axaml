@@ -12,17 +12,6 @@
 
 	<Application.Resources>
 		<ResourceDictionary>
-			<!-- Include external template file -->
-
-			<!-- Colors -->
-			<Color x:Key="PrimaryColor">#7851a9</Color>
-			<Color x:Key="SecondaryColor">#FFD218</Color>
-			<Color x:Key="TertiaryColor">#66023c</Color>
-			<Color x:Key="DarkBackground">#1a1a2e</Color>
-			<Color x:Key="PanelBackground">#2d3046</Color>
-			<Color x:Key="AccentText">#fefefe</Color>
-			<Color x:Key="MutedText">#aaaaaa</Color>
-			<Color x:Key="BorderColor">#5c5f78</Color>
 
 			<!-- Converters -->
 			<converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
@@ -32,20 +21,12 @@
 
 	</Application.Resources>
 
+
 	<Application.Styles>
 		<FluentTheme />
-
-		<Style Selector="Button">
-			<Setter Property="Background" Value="{DynamicResource PrimaryColor}" />
-			<Setter Property="Foreground" Value="White" />
-			<Setter Property="FontWeight" Value="SemiBold" />
-			<Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-			<Setter Property="CornerRadius" Value="6" />
-			<Setter Property="Margin" Value="6" />
-			<Setter Property="Padding" Value="12,6" />
-			<Setter Property="FontSize" Value="14" />
-		</Style>
+		<StyleInclude Source="avares://KickbackKingdomLauncher/Styles/Theme.axaml" />
 	</Application.Styles>
+	
 	<Application.DataTemplates>
 
 

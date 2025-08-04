@@ -6,6 +6,7 @@ using KickbackKingdomLauncher.Models.Software;
 using KickbackKingdomLauncher.ViewModels;
 using KickbackKingdomLauncher.ViewModels.Pages;
 using KickbackKingdomLauncher.ViewModels.Windows;
+using KickbackKingdomLauncher.Views.Windows;
 using System.Threading.Tasks;
 
 namespace KickbackKingdomLauncher.Views.Pages

@@ -27,4 +27,8 @@
 	<ItemGroup>
 	  <Folder Include="Views\Templates\" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\KickbackKingdom.Api\KickbackKingdom.API.csproj" />
+	</ItemGroup>
 </Project>

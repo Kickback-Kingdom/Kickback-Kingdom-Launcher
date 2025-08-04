@@ -6,7 +6,7 @@
   xmlns:views="clr-namespace:KickbackKingdomLauncher.Views"
   xmlns:vm="clr-namespace:KickbackKingdomLauncher.ViewModels.Windows"
   xmlns:software="clr-namespace:KickbackKingdomLauncher.ViewModels.Software;assembly=KickbackKingdomLauncher"
-  x:Class="KickbackKingdomLauncher.Views.MainWindow"
+  x:Class="KickbackKingdomLauncher.Views.Windows.MainWindow"
   x:DataType="vm:MainViewModel"
   Title="Kickback Kingdom Launcher"
   Width="1000" Height="600"

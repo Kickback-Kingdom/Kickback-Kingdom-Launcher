@@ -1,4 +1,7 @@
-﻿using KickbackKingdomLauncher.Models.Software;
+﻿using KickbackKingdom.API.Core;
+using KickbackKingdom.API.Core;
+using KickbackKingdom.API.Models;
+using KickbackKingdomLauncher.Models.Software;
 using KickbackKingdomLauncher.Models.Tasks;
 using KickbackKingdomLauncher.ViewModels.Base;
 using KickbackKingdomLauncher.ViewModels.Pages;
@@ -10,13 +13,16 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 
+
 namespace KickbackKingdomLauncher.ViewModels.Windows
 {
     public class MainViewModel : ViewModelBase
     {
         // Managers
         public SoftwareManager SoftwareManager => SoftwareManager.Instance;
-        public TaskManager TaskManager => TaskManager.Instance;
+        public TaskManager TaskManager => TaskManager.Instance; 
+        public Account? CurrentAccount => SessionManager.CurrentAccount;
+
 
         // Commands
         public ReactiveCommand<SoftwareEntry, Unit> SelectGameCommand { get; }

@@ -5,7 +5,7 @@ using KickbackKingdomLauncher.ViewModels.Pages;
 using KickbackKingdomLauncher.ViewModels.Software;
 using KickbackKingdomLauncher.ViewModels.Windows;
 
-namespace KickbackKingdomLauncher.Views
+namespace KickbackKingdomLauncher.Views.Windows
 {
     public partial class MainWindow : Window
     {

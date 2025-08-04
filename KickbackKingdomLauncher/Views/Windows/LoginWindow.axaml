@@ -1,0 +1,79 @@
+<Window
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:KickbackKingdomLauncher.ViewModels.Windows"
+    xmlns:views="clr-namespace:KickbackKingdomLauncher.Views.Windows"
+    xmlns:controls="clr-namespace:KickbackKingdomLauncher.Views.Controls"
+    x:Class="KickbackKingdomLauncher.Views.Windows.LoginWindow"
+    x:DataType="vm:LoginViewModel"
+    Title="Login"
+    Width="450" Height="520"
+    CanResize="False">
+
+	<Grid RowDefinitions="Auto,*">
+		<!-- Custom Title Bar -->
+		<controls:TitleBar />
+		
+		<StackPanel Grid.Row="1" Margin="40" Spacing="18">
+
+
+
+			<!-- Logo -->
+		<Image Source="/Assets/logo-kk.png"
+               Height="60"
+               HorizontalAlignment="Left"
+               Margin="0,0,0,20"/>
+
+		<!-- Email -->
+		<TextBlock Text="SIGN IN WITH EMAIL" FontWeight="Bold" />
+		<TextBox Text="{Binding Email}" />
+
+		<!-- Password -->
+		<TextBlock Text="PASSWORD" FontWeight="Bold" Margin="0,10,0,0" />
+		<TextBox Text="{Binding Password}" PasswordChar="•" />
+
+		<!-- Remember Me -->
+		<StackPanel Orientation="Horizontal" Margin="0,8,0,0" VerticalAlignment="Center">
+			<CheckBox Content="Remember me" />
+		</StackPanel>
+
+		<!-- Error Message -->
+		<TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontSize="12" />
+
+		<!-- Sign In Button -->
+		<Button Content="Sign in"
+                Command="{Binding LoginCommand}" />
+
+		<!-- Bottom Links -->
+		<Grid Margin="0,20,0,0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<!-- Help link -->
+			<TextBlock Grid.Column="0"
+                       HorizontalAlignment="Left"
+                       FontSize="12">
+				<Run Text="Help? " />
+				<TextBlock Text="I can't sign in"
+                           Cursor="Hand"
+                           TextDecorations="Underline"
+                           PointerPressed="OnForgotPasswordLinkClicked" />
+			</TextBlock>
+
+			<!-- Register link -->
+			<TextBlock Grid.Column="1"
+                       HorizontalAlignment="Right"
+                       FontSize="12">
+				<Run Text="Don't have an account? " />
+				<TextBlock Text="Register"
+                           Cursor="Hand"
+                           TextDecorations="Underline"
+                           PointerPressed="OnRegisterLinkClicked" />
+			</TextBlock>
+		</Grid>
+
+	</StackPanel>
+	</Grid>
+</Window>
