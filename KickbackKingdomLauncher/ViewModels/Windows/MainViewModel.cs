@@ -1,6 +1,6 @@
 ﻿using KickbackKingdom.API.Core;
-using KickbackKingdom.API.Core;
 using KickbackKingdom.API.Models;
+using KickbackKingdom.API.Services;
 using KickbackKingdomLauncher.Models.Software;
 using KickbackKingdomLauncher.Models.Tasks;
 using KickbackKingdomLauncher.ViewModels.Base;
@@ -9,7 +9,6 @@ using KickbackKingdomLauncher.ViewModels.Software;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
@@ -71,6 +70,7 @@ namespace KickbackKingdomLauncher.ViewModels.Windows
             SelectedListItem is SoftwareGroupHeader header
                 ? SoftwareManager.AllSoftware.Where(s => s.GroupLabel == header.Title)
                 : Enumerable.Empty<SoftwareEntry>();
+        public bool HasActiveTasks => TaskManager.HasActiveTasks;
 
         public bool IsViewingGroup => SelectedListItem is SoftwareGroupHeader;
 
@@ -106,12 +106,11 @@ namespace KickbackKingdomLauncher.ViewModels.Windows
                     }
                 }
 
-                this.RaisePropertyChanged(nameof(TaskManager.HasActiveTasks));
+                this.RaisePropertyChanged(nameof(HasActiveTasks));
                 this.RaisePropertyChanged(nameof(TaskManager.CombinedProgress));
                 this.RaisePropertyChanged(nameof(TaskManager.ActiveTaskTypeLabel));
             };
 
-            AddTestData();
             try
             {
                 Debug.WriteLine("Assigning SelectedListItem...");
@@ -126,7 +125,7 @@ namespace KickbackKingdomLauncher.ViewModels.Windows
             }
 
             Debug.WriteLine("MainViewModel constructor complete.");
-
+            LoadLibraryAsync();
         }
 
         private void CleanCompletedTasks()
@@ -135,46 +134,31 @@ namespace KickbackKingdomLauncher.ViewModels.Windows
             foreach (var task in finished)
                 TaskManager.ActiveTasks.Remove(task);
         }
-
-        private void AddTestData()
+        private async void LoadLibraryAsync()
         {
-            SoftwareManager.Clear();
-
-            var emberwood = new SoftwareEntry
+            try
             {
-                Title = "Emberwood Trading Co.",
-                BuildVersion = "1.2.4",
-                Description = "Explore dungeons, trade across galaxies, and uncover lost Nebi Gems in this fantasy-sci-fi crossover adventure.",
-                IsInstalled = false,
-                Type = SoftwareType.Game
-            };
+                var apiList = await LibraryService.GetAccountLibraryAsync();
 
-            var atlas = new SoftwareEntry
+                SoftwareManager.Clear();
+
+                foreach (var software in apiList)
+                {
+                    var entry = SoftwareEntry.FromApiSoftware(software);
+                    SoftwareManager.Add(entry);
+                }
+
+                this.RaisePropertyChanged(nameof(GroupedSoftwareFlat));
+
+                SelectedListItem = SoftwareManager.AllSoftware
+                    .Select(s => new SoftwareItemEntry { Software = s })
+                    .FirstOrDefault();
+            }
+            catch (Exception ex)
             {
-                Title = "Atlas Odyssey",
-                BuildVersion = "0.9.1",
-                Description = "Race starships, steal artifacts, and uncover cosmic conspiracies.",
-                IsInstalled = true,
-                Type = SoftwareType.Game
-            };
-
-            var craftsmen = new SoftwareEntry
-            {
-                Title = "Craftsmen Simulator",
-                BuildVersion = "2.0.0",
-                Description = "Build, repair, and innovate in the world of high fantasy industry.",
-                IsInstalled = true,
-                Type = SoftwareType.Game
-            };
-
-            SoftwareManager.Add(emberwood);
-            SoftwareManager.Add(atlas);
-            SoftwareManager.Add(craftsmen);
-
-            TaskManager.ActiveTasks.Clear();
-            TaskManager.ActiveTasks.Add(new TaskProgress { Software = emberwood, Progress = 30, Type = TaskProgress.TaskType.Download });
-            TaskManager.ActiveTasks.Add(new TaskProgress { Software = atlas, Progress = 65, Type = TaskProgress.TaskType.Install });
-            TaskManager.ActiveTasks.Add(new TaskProgress { Software = craftsmen, Progress = 10, Type = TaskProgress.TaskType.Update });
+                Debug.WriteLine($"Failed to load library: {ex.Message}");
+            }
         }
+
     }
 }

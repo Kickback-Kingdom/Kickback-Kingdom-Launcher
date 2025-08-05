@@ -22,9 +22,9 @@ public class InstallerViewModel : ReactiveObject
     private long _requiredSpace = 0L;
     private long _availableSpace;
     public ObservableCollection<VaultInfo> Vaults { get; }
-    private VaultInfo? _selectedVault;
+    private VaultInfo _selectedVault;
 
-    public VaultInfo? SelectedVault
+    public VaultInfo SelectedVault
     {
         get => _selectedVault;
         set
@@ -71,31 +71,35 @@ public class InstallerViewModel : ReactiveObject
         {
             try
             {
-                //Software.InstallPath = InstallPath;
+                if (string.IsNullOrWhiteSpace(InstallPath) || !HasEnoughSpace)
+                {
+                    await ShowErrorDialog.Handle(new Exception("Invalid install path or not enough space."));
+                    return;
+                }
 
-                //var task = new TaskProgress
-                //{
-                //    Software = Software,
-                //    Type = TaskProgress.TaskType.Install,
-                //    Progress = 0
-                //};
+                Software.VaultId = SelectedVault.Id;
 
-                //TaskManager.Instance.ActiveTasks.Add(task);
+                var task = new TaskProgress
+                {
+                    Software = Software,
+                    Type = TaskProgress.TaskType.Install,
+                    Progress = 0
+                };
 
-                //var installer = new SoftwareInstaller();
+                TaskManager.Instance.ActiveTasks.Add(task);
 
-                //var success = await installer.InstallSoftwareAsync(
-                //    Software,
-                //    Software.DownloadUrl,
-                //    InstallPath,
-                //    Software.ExpectedHash,
-                //    task
-                //);
+                var installer = new SoftwareInstaller();
 
-                //if (!success)
-                //    task.IsFailed = true;
+                var success = await installer.InstallSoftwareAsync(software, task);
 
-                //task.Progress = 100;
+                if (!success)
+                    task.IsFailed = true;
+
+                task.Progress = 100;
+
+                // Mark software as installed
+                Software.IsInstalled = success;
+
             }
             catch (Exception ex)
             {

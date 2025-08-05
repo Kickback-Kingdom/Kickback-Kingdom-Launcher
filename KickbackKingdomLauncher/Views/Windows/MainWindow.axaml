@@ -21,7 +21,7 @@
 		<Border Background="#1b1d2b"
         Height="40"
         DockPanel.Dock="Bottom"
-        IsVisible="{Binding TaskManager.HasActiveTasks}"
+        IsVisible="{Binding HasActiveTasks}"
 		PointerPressed="OnFooterClicked">
 
 			<Grid ColumnDefinitions="Auto,*,Auto"
@@ -151,6 +151,7 @@
 			<StackPanel Margin="12,0" Orientation="Vertical">
 				<Separator Margin="0,8"/>
 				<Button Content="Patch Notes" Margin="0,4" Padding="6"/>
+				<Button Content="Upload" Margin="0,4" Padding="6" Click="Upload_Click"/>
 				<Button Content="Exit" Margin="0,4" Padding="6"/>
 			</StackPanel>
 		</StackPanel>

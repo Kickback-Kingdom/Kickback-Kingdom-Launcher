@@ -72,12 +72,9 @@ public partial class App : Application
 
         if (!VaultManager.Instance.HasVaults)
         {
-            VaultManager.Instance.AddVault(new VaultInfo
-            {
-                Name = "Main Vault",
-                Path = VaultManager.GetDefaultVaultPath()
-            }, setAsDefault: true);
+            VaultManager.Instance.CreateDefaultVault();
         }
+
 
         SessionManager.Load();
 

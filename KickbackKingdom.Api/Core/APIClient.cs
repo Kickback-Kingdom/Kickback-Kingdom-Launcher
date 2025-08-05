@@ -13,11 +13,11 @@ namespace KickbackKingdom.API.Core
         private const string BaseUrl = "https://kickback-kingdom.com/api/v1"; 
         public static string ServiceKey = "";
 
-
         private static readonly HttpClient client = new();
 
         public enum BodyType
         {
+            None,
             Json,
             Form
         }
@@ -46,9 +46,11 @@ namespace KickbackKingdom.API.Core
             HttpMethod method,
             TRequest? requestBody,
             Dictionary<string, string>? headers = null,
-            BodyType bodyType = BodyType.Json) where TResponse : APIResponse, new()
+            BodyType bodyType = BodyType.Json, bool testEndpoint = false) where TResponse : APIResponse, new()
         {
-            var url = $"{BaseUrl}/{endpoint}";
+            string url = testEndpoint
+                            ? $"https://kickback-kingdom.com/testData/{endpoint}"
+                            : $"{BaseUrl}/{endpoint}";
             var request = new HttpRequestMessage(method, url);
 
             // Set up request content
@@ -93,6 +95,15 @@ namespace KickbackKingdom.API.Core
             {
                 return new TResponse { Success = false, Message = ex.Message };
             }
+        }
+        public static async Task<APIResponse<T>> GetAsync<T>(string endpoint, bool testEndpoint = false)
+        {
+            return await Call<object, APIResponse<T>>(endpoint, HttpMethod.Get, null, null, BodyType.None, testEndpoint);
+        }
+
+        public static async Task<APIResponse<T>> PostAsync<T>(string endpoint, object? requestBody, BodyType bodyType = BodyType.Json, bool testEndpoint = false)
+        {
+            return await Call<object, APIResponse<T>>(endpoint, HttpMethod.Post, requestBody, null, bodyType, testEndpoint);
         }
     }
 }

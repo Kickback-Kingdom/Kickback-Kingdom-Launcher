@@ -2,14 +2,19 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="clr-namespace:KickbackKingdomLauncher.ViewModels.Windows"
+    xmlns:controls="clr-namespace:KickbackKingdomLauncher.Views.Controls"
     x:Class="KickbackKingdomLauncher.Views.Windows.InstallerWindow"
     x:DataType="vm:InstallerViewModel"
     Title="Install Game"
-    Width="400" Height="300"
+    Width="500" Height="360"
     WindowStartupLocation="CenterOwner"
     CanResize="False">
 
-	<StackPanel Margin="20" Spacing="10">
+	<Grid RowDefinitions="Auto,*">
+		<!-- Title Bar -->
+		<controls:TitleBar />
+
+		<StackPanel Grid.Row="1" Margin="20" Spacing="10">
 		<TextBlock Text="Install Location" FontWeight="Bold"/>
 
 		<StackPanel>
@@ -57,4 +62,5 @@
 
 		</StackPanel>
 	</StackPanel>
+		</Grid>
 </Window>

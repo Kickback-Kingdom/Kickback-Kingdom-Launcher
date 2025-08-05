@@ -1,5 +1,7 @@
-﻿using System;
+﻿using KickbackKingdom.API.Models;
+using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +13,8 @@ namespace KickbackKingdomLauncher.Services
         private readonly HttpClient _httpClient = new();
         private CancellationTokenSource? _cts;
         private bool _isPaused;
+        private readonly IntegrityService _integrityService = new IntegrityService();
+
 
         public bool IsDownloading { get; private set; }
         public bool IsPaused => _isPaused;
@@ -30,28 +34,70 @@ namespace KickbackKingdomLauncher.Services
             _cts?.Cancel();
             _isPaused = false;
         }
-
-        public async Task<bool> DownloadToFileAsync(string url, string destinationPath, IProgress<double>? progress = null)
+        public async Task<bool> DownloadManifestFilesAsync(
+    SoftwareManifest manifest,
+    string installRoot,
+    IProgress<double>? overallProgress = null,
+    CancellationToken cancellationToken = default)
         {
-            _cts = new CancellationTokenSource();
+            long totalBytes = manifest.Files.Sum(f => f.Size);
+            long downloadedBytes = 0;
+
+            foreach (var file in manifest.Files)
+            {
+                var destPath = Path.Combine(installRoot, file.RelativePath);
+                Directory.CreateDirectory(Path.GetDirectoryName(destPath)!);
+
+                var isValid = _integrityService.VerifySha256(destPath, file.Sha256);
+                if (File.Exists(destPath) && isValid)
+                {
+                    downloadedBytes += file.Size;
+                    overallProgress?.Report((double)downloadedBytes / totalBytes * 100);
+                    continue;
+                }
+                var success = await DownloadToFileAsync(manifest.GetFileUrl(file), destPath, null, cancellationToken);
+                if (!success)
+                    return false;
+
+                isValid = _integrityService.VerifySha256(destPath, file.Sha256);
+                if (!isValid)
+                {
+                    File.Delete(destPath);
+                    return false;
+                }
+
+                downloadedBytes += file.Size;
+                overallProgress?.Report((double)downloadedBytes / totalBytes * 100);
+            }
+
+            return true;
+        }
+
+        public async Task<bool> DownloadToFileAsync(string url, string destinationPath, IProgress<double>? progress = null, CancellationToken cancellationToken = default)
+        {
             IsDownloading = true;
             _isPaused = false;
+            _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
             try
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+                long existingLength = File.Exists(destinationPath) ? new FileInfo(destinationPath).Length : 0;
 
-                using var response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, _cts.Token);
+                using var request = new HttpRequestMessage(HttpMethod.Get, url);
+                if (existingLength > 0)
+                    request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(existingLength, null);
+
+                using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, _cts.Token);
                 response.EnsureSuccessStatusCode();
 
-                var totalBytes = response.Content.Headers.ContentLength ?? -1L;
+                var totalBytes = (response.Content.Headers.ContentRange?.Length ?? response.Content.Headers.ContentLength) ?? -1;
                 var buffer = new byte[8192];
                 var isContentLengthKnown = totalBytes > 0;
 
                 using var contentStream = await response.Content.ReadAsStreamAsync(_cts.Token);
-                using var fileStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true);
+                using var fileStream = new FileStream(destinationPath, FileMode.Append, FileAccess.Write, FileShare.None, 8192, true);
 
-                long bytesDownloaded = 0;
+                long bytesDownloaded = existingLength;
 
                 while (true)
                 {
@@ -80,10 +126,9 @@ namespace KickbackKingdomLauncher.Services
 
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
-                if (File.Exists(destinationPath))
-                    File.Delete(destinationPath);
+                Console.WriteLine($"Download failed for {url}: {ex.Message}");
                 return false;
             }
             finally
@@ -91,5 +136,6 @@ namespace KickbackKingdomLauncher.Services
                 IsDownloading = false;
             }
         }
+
     }
 }

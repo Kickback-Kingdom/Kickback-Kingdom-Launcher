@@ -22,7 +22,23 @@ namespace KickbackKingdomLauncher.Models.Vault
             : null;
 
         private VaultManager() { }
-        public static string GetDefaultVaultPath()
+        public VaultInfo? FindById(Guid id)
+        {
+            return ValidVaults.FirstOrDefault(v => v.Id == id);
+        }
+        public VaultInfo? FindVaultContainingLocator(string locator)
+        {
+            foreach (var vault in ValidVaults)
+            {
+                var dir = Path.Combine(vault.Path, locator);
+                if (Directory.Exists(dir))
+                    return vault;
+            }
+
+            return null;
+        }
+
+        public static string GetInitialVaultPath()
         {
             var baseDir = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -72,6 +88,40 @@ namespace KickbackKingdomLauncher.Models.Vault
             }
             SaveVaults();
         }
+        public VaultInfo GetDefaultVault()
+        {
+            return DefaultVault
+                   ?? Vaults.FirstOrDefault()
+                   ?? CreateDefaultVault();
+        }
+
+
+        public VaultInfo CreateVault(string path, string name)
+        {
+            // Ensure the directory exists
+            Directory.CreateDirectory(path);
+
+            // Create a new VaultInfo object
+            var vault = new VaultInfo
+            {
+                Path = path,
+                Name = name
+            };
+
+            // Add it to the list and save
+            AddVault(vault);
+
+            return vault;
+        }
+        public VaultInfo CreateDefaultVault()
+        {
+            var path = GetInitialVaultPath();
+            var vault = CreateVault(path, "Main Vault");
+            SetDefault(vault);
+            return vault;
+        }
+
+
         public bool HasVaults => Vaults.Any(v => Directory.Exists(v.Path));
 
     }

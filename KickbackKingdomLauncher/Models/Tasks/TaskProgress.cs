@@ -10,7 +10,7 @@ namespace KickbackKingdomLauncher.Models.Tasks
 {
     public class TaskProgress : ReactiveObject
     {
-        public enum TaskType { Download, Install, Update }
+        public enum TaskType { Download, Install, Update, BuildManifest }
 
         public TaskType Type { get; set; } = TaskType.Download;
 
@@ -67,6 +67,27 @@ namespace KickbackKingdomLauncher.Models.Tasks
         {
             get => _estimatedTimeRemaining;
             set => this.RaiseAndSetIfChanged(ref _estimatedTimeRemaining, value);
+        }
+
+        public  void RunAsync(Func<Action<double>, Task> work)
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await work(progress =>
+                    {
+                        // Clamp to 0–100
+                        Progress = Math.Max(0, Math.Min(100, progress * 100));
+                    });
+
+                    Progress = 100;
+                }
+                catch
+                {
+                    IsFailed = true;
+                }
+            });
         }
     }
 

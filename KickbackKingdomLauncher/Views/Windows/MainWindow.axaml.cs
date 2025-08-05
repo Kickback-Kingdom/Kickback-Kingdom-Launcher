@@ -42,6 +42,11 @@ namespace KickbackKingdomLauncher.Views.Windows
                 }
             }
         }
+        private void Upload_Click(object? sender, RoutedEventArgs e)
+        {
+            var window = new ManifestBuilderWindow();
+            window.Show();
+        }
 
     }
 }

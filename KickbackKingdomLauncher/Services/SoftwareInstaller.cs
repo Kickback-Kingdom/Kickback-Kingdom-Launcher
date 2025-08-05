@@ -1,4 +1,6 @@
-﻿using KickbackKingdomLauncher.Models;
+﻿using KickbackKingdom.API.Models;
+using KickbackKingdom.API.Services;
+using KickbackKingdomLauncher.Models;
 using KickbackKingdomLauncher.Models.Software;
 using KickbackKingdomLauncher.Models.Tasks;
 using System;
@@ -19,17 +21,27 @@ namespace KickbackKingdomLauncher.Services
             _integrityService = new IntegrityService();
             _installerService = new InstallerService();
         }
+        public async Task<SoftwareManifest> GetManifestAsync(SoftwareEntry software)
+        {
+            if (string.IsNullOrWhiteSpace(software.Software.Locator))
+                throw new ArgumentException("Software ID is required to fetch manifest.");
 
-        public async Task<bool> InstallSoftwareAsync(
+            return await LibraryService.GetManifestAsync(software.Software.Locator);
+        }
+
+        public async Task<bool> InstallSoftwareAsync(SoftwareEntry softwareEntry, TaskProgress taskProgress)
+        {
+            SoftwareManifest manifest = await GetManifestAsync(softwareEntry);
+
+            return await InstallSoftwareFromManifestAsync(softwareEntry, manifest, softwareEntry.InstallPath!, taskProgress);
+        }
+
+        public async Task<bool> InstallSoftwareFromManifestAsync(
             SoftwareEntry software,
-            string downloadUrl,
+            SoftwareManifest manifest,
             string installPath,
-            string expectedHash,
             TaskProgress taskProgress)
         {
-            var tempPath = Path.GetTempFileName();
-
-            // Wrap TaskProgress in a Progress<double>
             var progress = new Progress<double>(value => taskProgress.Progress = value);
 
             taskProgress.Software = software;
@@ -37,24 +49,18 @@ namespace KickbackKingdomLauncher.Services
             taskProgress.Progress = 0;
             taskProgress.IsFailed = false;
 
-            var success = await _downloadService.DownloadToFileAsync(downloadUrl, tempPath, progress);
+            var success = await _installerService.InstallFromManifestAsync(manifest, installPath, progress);
             if (!success)
             {
                 taskProgress.IsFailed = true;
                 return false;
             }
 
-            if (!_integrityService.VerifySha256(tempPath, expectedHash))
-            {
-                taskProgress.IsFailed = true;
-                return false;
-            }
-
-            await _installerService.Install(tempPath, installPath);
             software.IsInstalled = true;
             taskProgress.Progress = 100;
 
             return true;
         }
+
     }
 }
