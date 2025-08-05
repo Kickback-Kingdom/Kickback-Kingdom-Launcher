@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using KickbackKingdom.API.Core;
+using KickbackKingdomLauncher.Models.Secrets;
 using KickbackKingdomLauncher.Models.Vault;
 using KickbackKingdomLauncher.ViewModels;
 using KickbackKingdomLauncher.ViewModels.Dialogs;
@@ -10,6 +11,7 @@ using KickbackKingdomLauncher.ViewModels.Windows;
 using KickbackKingdomLauncher.Views;
 using KickbackKingdomLauncher.Views.Windows;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,70 +23,18 @@ public partial class App : Application
     {
         AvaloniaXamlLoader.Load(this);
     }
-
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            Exception? earlyException = null;
+            // Provide a minimal placeholder window (invisible)
+            var placeholderWindow = new LoginWindow();
 
-            try
-            {
-                // Always load vaults early
-                VaultManager.Instance.LoadVaults();
+            desktop.MainWindow = placeholderWindow;
+            placeholderWindow.Show();
 
-                if (!VaultManager.Instance.HasVaults)
-                {
-                    string path = VaultManager.GetDefaultVaultPath();
 
-                    var vault = new VaultInfo
-                    {
-                        Name = "Main Vault",
-                        Path = path
-                    };
-
-                    VaultManager.Instance.AddVault(vault, setAsDefault: true);
-                }
-
-                // Load session (from KickbackKingdom.API)
-                SessionManager.Load();
-
-                if (SessionManager.IsLoggedIn())
-                {
-                    // User is logged in — go straight to MainWindow
-                    var mainWindow = new MainWindow();
-
-                    desktop.MainWindow = mainWindow;
-                    mainWindow.Show();
-                }
-                else
-                {
-                    // User is not logged in — show LoginWindow first
-                    var loginWindow = new LoginWindow();
-                    var loginVM = new LoginViewModel();
-
-                    loginWindow.DataContext = loginVM;
-
-                    loginVM.OnLoginSuccess += account =>
-                    {
-                        SessionManager.Save(account);
-
-                        var mainWindow = new MainWindow();
-
-                        loginWindow.Close();
-                        desktop.MainWindow = mainWindow;
-                        mainWindow.Show();
-                    };
-
-                    loginWindow.Show();
-                }
-            }
-            catch (Exception ex)
-            {
-                earlyException = ex;
-            }
-
-            // Set up global error handlers
+            // Global UI thread exception handler
             SynchronizationContext.SetSynchronizationContext(new UIExceptionCatchingSyncContext());
 
             AppDomain.CurrentDomain.UnhandledException += (_, e) =>
@@ -99,20 +49,83 @@ public partial class App : Application
                 _ = ShowErrorFromExceptionAsync(e.Exception);
             };
 
-            base.OnFrameworkInitializationCompleted();
-
-            if (earlyException != null)
+            // Launch the startup logic async after UI is ready
+            Avalonia.Threading.Dispatcher.UIThread.Post(async () =>
             {
-                Avalonia.Threading.Dispatcher.UIThread.Post(async () =>
+                try
                 {
-                    if (desktop.MainWindow?.IsVisible == true)
-                        await ShowErrorAsync(desktop.MainWindow, earlyException);
-                    else
-                        await ShowErrorAsync(null, earlyException);
-                });
+                    await SafeStartupAsync(desktop);
+                }
+                catch (Exception ex)
+                {
+                    await ShowErrorFromExceptionAsync(ex);
+                }
+            });
+        }
+
+        base.OnFrameworkInitializationCompleted();
+    }
+    private async Task SafeStartupAsync(IClassicDesktopStyleApplicationLifetime desktop)
+    {
+        APIClient.ServiceKey = SecretsManager.Secrets.ServiceKey;
+        VaultManager.Instance.LoadVaults();
+
+        if (!VaultManager.Instance.HasVaults)
+        {
+            VaultManager.Instance.AddVault(new VaultInfo
+            {
+                Name = "Main Vault",
+                Path = VaultManager.GetDefaultVaultPath()
+            }, setAsDefault: true);
+        }
+
+        SessionManager.Load();
+
+        if (SessionManager.IsLoggedIn())
+        {
+            var mainWindow = new MainWindow();
+
+            mainWindow.DataContext = new MainViewModel();
+            mainWindow.Show();       // Show the main window first
+
+            if (desktop.MainWindow is LoginWindow loginWindow)
+            {
+                loginWindow.Close(); // Now safely close the login window
             }
+
+            desktop.MainWindow = mainWindow; // Set as current main window after it's visible
+
+            mainWindow.Activate();
+            mainWindow.Focus();
+        }
+        else if (desktop.MainWindow is LoginWindow loginWindow)
+        {
+            var loginVM = new LoginViewModel();
+            loginWindow.DataContext = loginVM;
+
+            loginVM.OnLoginSuccess += account =>
+            {
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    try
+                    {
+                        SessionManager.Save(account);
+                        var mainWindow = new MainWindow();
+                        desktop.MainWindow = mainWindow;
+                        mainWindow.Show();
+                        loginWindow.Close();
+                        mainWindow.Activate();
+                        mainWindow.Focus();
+                    }
+                    catch (Exception ex)
+                    {
+                        _ = ShowErrorFromExceptionAsync(ex);
+                    }
+                });
+            };
         }
     }
+
 
 
 

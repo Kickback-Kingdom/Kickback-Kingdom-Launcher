@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 
@@ -14,16 +15,16 @@ namespace KickbackKingdomLauncher.Models.Secrets
             {
                 var json = File.ReadAllText("KickbackSecrets.json");
 
-                // Use System.Text.Json
                 Secrets = JsonSerializer.Deserialize<Secrets>(json, new JsonSerializerOptions
                 {
-                    PropertyNameCaseInsensitive = true // allows "serviceKey" or "ServiceKey"
+                    PropertyNameCaseInsensitive = true
                 }) ?? new Secrets();
+
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[SecretsManager] Failed to load secrets: {ex.Message}");
-                Secrets = new Secrets(); // fallback to empty secrets
+                Debug.WriteLine($"[SecretsManager] Failed to load secrets: {ex.Message}");
+                Secrets = new Secrets(); // fallback to empty
             }
         }
     }

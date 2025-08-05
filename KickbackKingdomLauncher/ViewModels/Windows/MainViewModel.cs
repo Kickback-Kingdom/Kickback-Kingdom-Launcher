@@ -10,6 +10,7 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 
@@ -76,6 +77,8 @@ namespace KickbackKingdomLauncher.ViewModels.Windows
         // Constructor
         public MainViewModel()
         {
+            Debug.WriteLine("MainViewModel constructor started.");
+
             SelectGameCommand = ReactiveCommand.Create<SoftwareEntry>(software =>
                 SelectedListItem = new SoftwareItemEntry { Software = software });
 
@@ -109,11 +112,21 @@ namespace KickbackKingdomLauncher.ViewModels.Windows
             };
 
             AddTestData();
+            try
+            {
+                Debug.WriteLine("Assigning SelectedListItem...");
+                SelectedListItem = SoftwareManager.AllSoftware
+                    .Select(s => new SoftwareItemEntry { Software = s })
+                    .FirstOrDefault();
+                Debug.WriteLine("SelectedListItem assignment complete.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception assigning SelectedListItem: " + ex);
+            }
 
-            // Default View
-            SelectedListItem = SoftwareManager.AllSoftware
-                .Select(s => new SoftwareItemEntry { Software = s })
-                .FirstOrDefault();
+            Debug.WriteLine("MainViewModel constructor complete.");
+
         }
 
         private void CleanCompletedTasks()

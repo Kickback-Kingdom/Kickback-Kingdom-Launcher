@@ -19,23 +19,38 @@ namespace KickbackKingdom.API.Core
         {
             if (!File.Exists(SessionFile)) return;
 
-            var json = File.ReadAllText(SessionFile);
-            CurrentAccount = JsonSerializer.Deserialize<Account>(json);
-
-            if (CurrentAccount?.IsSessionValid() != true)
+            try
             {
+                var json = File.ReadAllText(SessionFile);
+                CurrentAccount = JsonSerializer.Deserialize<Account>(json);
+
+                if (CurrentAccount?.IsSessionValid() != true)
+                {
+                    CurrentAccount = null;
+                    Logout();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Failed to load session: " + ex);
                 CurrentAccount = null;
                 Logout();
             }
         }
 
+
         public static void Save(Account account)
         {
             CurrentAccount = account;
-            Directory.CreateDirectory(Path.GetDirectoryName(SessionFile)!);
+            var dir = Path.GetDirectoryName(SessionFile)!;
+            Directory.CreateDirectory(dir);
+
             var json = JsonSerializer.Serialize(account);
             File.WriteAllText(SessionFile, json);
+
+            System.Diagnostics.Debug.WriteLine($"Session saved to {SessionFile}");
         }
+
 
         public static void Logout()
         {

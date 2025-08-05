@@ -2,6 +2,7 @@
 using KickbackKingdom.API.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace KickbackKingdom.API.Services
         {
             public string email { get; set; } = "";
             public string pwd { get; set; } = "";
-            public string ServiceKey { get; set; } = APIClient.ServiceKey;
+            public string serviceKey { get; set; } = APIClient.ServiceKey;
         }
 
         public class LoginResponse : APIResponse<Account> { }

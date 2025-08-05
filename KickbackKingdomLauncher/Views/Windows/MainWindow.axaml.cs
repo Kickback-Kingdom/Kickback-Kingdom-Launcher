@@ -4,15 +4,24 @@ using Avalonia.Interactivity;
 using KickbackKingdomLauncher.ViewModels.Pages;
 using KickbackKingdomLauncher.ViewModels.Software;
 using KickbackKingdomLauncher.ViewModels.Windows;
+using System;
+using System.Diagnostics;
 
 namespace KickbackKingdomLauncher.Views.Windows
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : WindowBase
     {
         public MainWindow()
         {
             InitializeComponent();
+            Debug.WriteLine("MainWindow initialized");
         }
+
+
+        private void OnMinimizeClicked(object? sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+        private void OnToggleMaximizeClicked(object? sender, RoutedEventArgs e) =>
+            WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        private void OnCloseClicked(object? sender, RoutedEventArgs e) => Close();
 
         private void OnFooterClicked(object? sender, PointerPressedEventArgs e)
         {
