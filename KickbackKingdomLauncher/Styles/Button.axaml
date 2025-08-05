@@ -1,0 +1,66 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<Design.PreviewWith>
+		<StackPanel Orientation="Vertical" Spacing="10" >
+			<Button Content="Default" />
+			<Button Content="Disabled" IsEnabled="False" />
+		</StackPanel>
+	</Design.PreviewWith>
+	<!-- Base Button Template -->
+	<Style Selector="Button">
+		<Setter Property="Template">
+			<ControlTemplate TargetType="Button">
+				<Border Name="FocusBorder"
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						CornerRadius="{TemplateBinding CornerRadius}">
+					<ContentPresenter HorizontalAlignment="Center"
+									  VerticalAlignment="Center"
+									  Margin="{TemplateBinding Padding}"
+									  Content="{TemplateBinding Content}"
+									  Foreground="{TemplateBinding Foreground}" />
+				</Border>
+			</ControlTemplate>
+		</Setter>
+
+		<!-- Defaults -->
+		<Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+		<Setter Property="Foreground" Value="White" />
+		<Setter Property="FontWeight" Value="Bold" />
+		<Setter Property="Padding" Value="10,6" />
+		<Setter Property="CornerRadius" Value="6" />
+		<Setter Property="FontSize" Value="14" />
+		<Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+		<Setter Property="BorderThickness" Value="1" />
+	</Style>
+
+	<!-- Hover -->
+	<Style Selector="Button:pointerover /template/ #FocusBorder"
+		   x:SetterTargetType="Border">
+		<Setter Property="Background" Value="#a98cff" />
+		<Setter Property="BorderBrush" Value="{DynamicResource SecondaryBrush}" />
+	</Style>
+
+	<!-- Focus (keyboard nav / enter target) -->
+	<Style Selector="Button:focus-within /template/ #FocusBorder"
+		   x:SetterTargetType="Border">
+		<Setter Property="BorderBrush" Value="{DynamicResource SecondaryBrush}" />
+	</Style>
+
+	<!-- Disabled -->
+	<Style Selector="Button:disabled /template/ #FocusBorder"
+		   x:SetterTargetType="Border">
+		<Setter Property="Background" Value="#3f3360" />
+		<Setter Property="BorderBrush" Value="#3f3360" />
+	</Style>
+
+	<Style Selector="Button:disabled ContentPresenter"
+		   x:SetterTargetType="ContentPresenter">
+		<Setter Property="Foreground" Value="#aaaaaa" />
+	</Style>
+
+
+
+</Styles>

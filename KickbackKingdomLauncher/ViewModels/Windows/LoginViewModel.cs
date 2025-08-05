@@ -30,27 +30,26 @@ public class LoginViewModel : ReactiveObject
     }
     private void OpenLink(string? url)
     {
-        if (!string.IsNullOrWhiteSpace(url))
+        if (string.IsNullOrWhiteSpace(url))
+            return;
+
+        try
         {
-            try
+            var psi = new System.Diagnostics.ProcessStartInfo
             {
-#if WINDOWS
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
-#elif LINUX
-            System.Diagnostics.Process.Start("xdg-open", url);
-#elif OSX
-            System.Diagnostics.Process.Start("open", url);
-#else
-                throw new PlatformNotSupportedException("Cannot open links on this platform.");
-#endif
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = $"Unable to open link: {ex.Message}";
-                this.RaisePropertyChanged(nameof(ErrorMessage));
-            }
+                FileName = url,
+                UseShellExecute = true // crucial: lets OS open the link with default browser
+            };
+
+            System.Diagnostics.Process.Start(psi);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Unable to open link: {ex.Message}";
+            this.RaisePropertyChanged(nameof(ErrorMessage));
         }
     }
+
 
     private async Task LoginAsync()
     {

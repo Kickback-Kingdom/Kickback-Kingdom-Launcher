@@ -1,117 +1,12 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-	<Styles.Resources>
-
-		<!-- Brand Colors -->
-		<Color x:Key="PrimaryColor">#7851a9</Color>
-		<!-- Purple -->
-		<Color x:Key="SecondaryColor">#FFD218</Color>
-		<!-- Yellow -->
-		<Color x:Key="TertiaryColor">#66023c</Color>
-		<!-- Burgundy -->
-
-		<!-- Extended Colors -->
-		<Color x:Key="DarkBackground">#1a1a2e</Color>
-		<Color x:Key="PanelBackground">#2d3046</Color>
-		<Color x:Key="AccentText">#fefefe</Color>
-		<Color x:Key="MutedText">#aaaaaa</Color>
-		<Color x:Key="BorderColor">#5c5f78</Color>
-
-		<!-- Brushes -->
-		<SolidColorBrush x:Key="PrimaryBrush" Color="{DynamicResource PrimaryColor}" />
-		<SolidColorBrush x:Key="SecondaryBrush" Color="{DynamicResource SecondaryColor}" />
-		<SolidColorBrush x:Key="TertiaryBrush" Color="{DynamicResource TertiaryColor}" />
-
-		<SolidColorBrush x:Key="DarkBackgroundBrush" Color="{DynamicResource DarkBackground}" />
-		<SolidColorBrush x:Key="PanelBackgroundBrush" Color="{DynamicResource PanelBackground}" />
-		<SolidColorBrush x:Key="AccentTextBrush" Color="{DynamicResource AccentText}" />
-		<SolidColorBrush x:Key="MutedTextBrush" Color="{DynamicResource MutedText}" />
-		<SolidColorBrush x:Key="BorderBrush" Color="{DynamicResource BorderColor}" />
-
-	</Styles.Resources>
-
-	<!-- Global Style Examples -->
-
-	<!-- Window Background -->
-	<Style Selector="Window">
-		<Setter Property="Background" Value="{DynamicResource DarkBackgroundBrush}" />
-	</Style>
-
-	<!-- Text -->
-	<Style Selector="TextBlock">
-		<Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
-	</Style>
-
-	<!-- TextBox -->
-	<Style Selector="TextBox">
-		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
-		<Setter Property="Foreground" Value="White" />
-		<Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
-		<Setter Property="CornerRadius" Value="6" />
-		<Setter Property="Padding" Value="8" />
-		<Setter Property="FontSize" Value="14" />
-	</Style>
-
-	<!-- Button -->
-	<Style Selector="Button">
-		<Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
-		<Setter Property="Foreground" Value="White" />
-		<Setter Property="FontWeight" Value="Bold" />
-		<Setter Property="Padding" Value="10,6" />
-		<Setter Property="CornerRadius" Value="6" />
-		<Setter Property="FontSize" Value="14" />
-	</Style>
-
-	<!-- Link-style Button -->
-	<Style Selector="Button.link">
-		<Setter Property="Foreground" Value="{DynamicResource SecondaryBrush}" />
-		<Setter Property="Background" Value="Transparent" />
-		<Setter Property="BorderBrush" Value="Transparent" />
-		<Setter Property="Padding" Value="0" />
-		<Setter Property="Cursor" Value="Hand" />
-	</Style>
-
-	<!-- Base style for link buttons' TextBlock -->
-	<Style Selector="Button.link TextBlock">
-		<Setter Property="Foreground" Value="{DynamicResource SecondaryBrush}" />
-		<Setter Property="TextDecorations">
-			<TextDecorationCollection/>
-		</Setter>
-		<Setter Property="Cursor" Value="Hand" />
-	</Style>
-
-
-	<!-- Hover underline on TextBlock inside link button -->
-	<Style Selector="Button.link:pointerover TextBlock">
-		<Setter Property="TextDecorations" Value="Underline" />
-	</Style>
-	
-	<!-- Title Bar Button Base -->
-	<Style Selector="Button.TitleBarButton">
-		<Setter Property="Width" Value="36"/>
-		<Setter Property="Height" Value="36"/>
-		<Setter Property="FontSize" Value="16"/>
-		<Setter Property="Background" Value="Transparent"/>
-		<Setter Property="Foreground" Value="White"/>
-		<Setter Property="Cursor" Value="Hand"/>
-		<Setter Property="BorderBrush" Value="Transparent"/>
-		<Setter Property="FontWeight" Value="Bold"/>
-		<Setter Property="HorizontalContentAlignment" Value="Center"/>
-		<Setter Property="VerticalContentAlignment" Value="Center"/>
-		<Setter Property="Padding" Value="0"/>
-		<Setter Property="CornerRadius" Value="4"/>
-	</Style>
-
-
-	<Style Selector="Button.TitleBarButton:pointerover" x:SetterTargetType="Button">
-		<Setter Property="Background" Value="#4d4b6a"/>
-	</Style>
-	<!-- Close button hover -->
-	<Style Selector="Button.TitleBarButton.Close:pointerover">
-		<Setter Property="Background" Value="#a34040"/>
-	</Style>
-
-
+	<StyleInclude Source="avares://KickbackKingdomLauncher/Styles/Colors.axaml" />
+	<StyleInclude Source="avares://KickbackKingdomLauncher/Styles/Window.axaml" />
+	<StyleInclude Source="avares://KickbackKingdomLauncher/Styles/Text.axaml" />
+	<StyleInclude Source="avares://KickbackKingdomLauncher/Styles/TextBox.axaml" />
+	<StyleInclude Source="avares://KickbackKingdomLauncher/Styles/CheckBox.axaml" />
+	<StyleInclude Source="avares://KickbackKingdomLauncher/Styles/Button.axaml" />
+	<StyleInclude Source="avares://KickbackKingdomLauncher/Styles/TitleBar.axaml" />
 
 </Styles>

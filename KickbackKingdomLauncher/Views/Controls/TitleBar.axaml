@@ -21,7 +21,7 @@
                        Width="24"
                        Height="24"
                        Margin="0,0,8,0"/>
-				<TextBlock Text="Kickback Kingdom Launcher"
+				<TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
                            FontWeight="Bold"
                            Foreground="{DynamicResource AccentTextBrush}"
                            FontSize="14"

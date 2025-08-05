@@ -1,0 +1,30 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Design="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls">
+
+	<!-- Design-time preview for this style sheet -->
+	<Design.PreviewWith>
+		<TextBlock Classes="link" Text="Sample Link" />
+	</Design.PreviewWith>
+
+	<!-- Default TextBlock style -->
+	<Style Selector="TextBlock">
+		<Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+	</Style>
+
+	<!-- Link-style TextBlock -->
+	<Style Selector="TextBlock.link">
+		<Setter Property="Foreground" Value="White" />
+		<Setter Property="Cursor" Value="Hand" />
+		<Setter Property="TextDecorations">
+			<TextDecorationCollection />
+		</Setter>
+	</Style>
+
+	<!-- Hover effect for link-style TextBlock -->
+	<Style Selector="TextBlock.link:pointerover">
+		<Setter Property="Foreground" Value="{DynamicResource SecondaryBrush}" />
+		<Setter Property="TextDecorations" Value="Underline" />
+		<Setter Property="Cursor" Value="Hand" />
+	</Style>
+</Styles>

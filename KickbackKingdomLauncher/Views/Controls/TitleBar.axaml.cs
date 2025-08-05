@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -6,6 +7,7 @@ namespace KickbackKingdomLauncher.Views.Controls;
 
 public partial class TitleBar : UserControl
 {
+
     public TitleBar()
     {
         InitializeComponent();

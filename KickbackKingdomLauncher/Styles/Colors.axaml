@@ -1,0 +1,30 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	
+	
+	<Styles.Resources>
+
+		<!-- Brand Colors -->
+		<Color x:Key="PrimaryColor">#7851a9</Color>
+		<Color x:Key="SecondaryColor">#FFD218</Color>
+		<Color x:Key="TertiaryColor">#66023c</Color>
+
+		<!-- Extended Colors -->
+		<Color x:Key="DarkBackground">#1a1a2e</Color>
+		<Color x:Key="PanelBackground">#2d3046</Color>
+		<Color x:Key="AccentText">#fefefe</Color>
+		<Color x:Key="MutedText">#aaaaaa</Color>
+		<Color x:Key="BorderColor">#5c5f78</Color>
+
+		<!-- Brushes -->
+		<SolidColorBrush x:Key="PrimaryBrush" Color="{DynamicResource PrimaryColor}" />
+		<SolidColorBrush x:Key="SecondaryBrush" Color="{DynamicResource SecondaryColor}" />
+		<SolidColorBrush x:Key="TertiaryBrush" Color="{DynamicResource TertiaryColor}" />
+		<SolidColorBrush x:Key="DarkBackgroundBrush" Color="{DynamicResource DarkBackground}" />
+		<SolidColorBrush x:Key="PanelBackgroundBrush" Color="{DynamicResource PanelBackground}" />
+		<SolidColorBrush x:Key="AccentTextBrush" Color="{DynamicResource AccentText}" />
+		<SolidColorBrush x:Key="MutedTextBrush" Color="{DynamicResource MutedText}" />
+		<SolidColorBrush x:Key="BorderBrush" Color="{DynamicResource BorderColor}" />
+
+	</Styles.Resources>
+</Styles>

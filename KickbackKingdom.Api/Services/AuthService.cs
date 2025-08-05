@@ -12,8 +12,8 @@ namespace KickbackKingdom.API.Services
     {
         public class LoginRequest
         {
-            public string Email { get; set; } = "";
-            public string Pwd { get; set; } = "";
+            public string email { get; set; } = "";
+            public string pwd { get; set; } = "";
             public string ServiceKey { get; set; } = APIClient.ServiceKey;
         }
 
@@ -23,8 +23,8 @@ namespace KickbackKingdom.API.Services
         {
             var request = new LoginRequest
             {
-                Email = email,
-                Pwd = password
+                email = email,
+                pwd = password
             };
 
             return await APIClient.Call<LoginRequest, LoginResponse>(

@@ -2,78 +2,100 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="clr-namespace:KickbackKingdomLauncher.ViewModels.Windows"
-    xmlns:views="clr-namespace:KickbackKingdomLauncher.Views.Windows"
     xmlns:controls="clr-namespace:KickbackKingdomLauncher.Views.Controls"
     x:Class="KickbackKingdomLauncher.Views.Windows.LoginWindow"
     x:DataType="vm:LoginViewModel"
-    Title="Login"
-    Width="450" Height="520"
-    CanResize="False">
+    Title="Kickback Kingdom - Login"
+    Width="680" Height="400"
+    CanResize="False"
+    Background="#1e1c2e">
 
 	<Grid RowDefinitions="Auto,*">
-		<!-- Custom Title Bar -->
+		<!-- Title Bar -->
 		<controls:TitleBar />
-		
-		<StackPanel Grid.Row="1" Margin="40" Spacing="18">
 
+		<!-- Main Content -->
+		<Grid Grid.Row="1" ColumnDefinitions="*,Auto,*">
+			<Border Grid.Column="1"
+                    Width="600"
+                    Padding="0"
+                    VerticalAlignment="Top"
+                    Margin="0,24,0,0">
 
+				<Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
 
-			<!-- Logo -->
-		<Image Source="/Assets/logo-kk.png"
-               Height="60"
-               HorizontalAlignment="Left"
-               Margin="0,0,0,20"/>
+					<!-- Logo -->
+					<Image Source="/Assets/logo-kk.png"
+                           Height="40"
+                           HorizontalAlignment="Left"
+                           Margin="0,0,0,8"
+                           Grid.Row="0" />
 
-		<!-- Email -->
-		<TextBlock Text="SIGN IN WITH EMAIL" FontWeight="Bold" />
-		<TextBox Text="{Binding Email}" />
+					<!-- Email Label -->
+					<TextBlock Text="SIGN IN WITH EMAIL"
+                               FontWeight="Bold"
+                               FontSize="13"
+                               Foreground="White"
+                               Grid.Row="1" />
 
-		<!-- Password -->
-		<TextBlock Text="PASSWORD" FontWeight="Bold" Margin="0,10,0,0" />
-		<TextBox Text="{Binding Password}" PasswordChar="•" />
+					<!-- Email Input -->
+					<TextBox Text="{Binding Email}" x:Name="emailBox"
+                             Grid.Row="2" />
 
-		<!-- Remember Me -->
-		<StackPanel Orientation="Horizontal" Margin="0,8,0,0" VerticalAlignment="Center">
-			<CheckBox Content="Remember me" />
-		</StackPanel>
+					<!-- Password Label -->
+					<TextBlock Text="PASSWORD"
+                               FontWeight="Bold"
+                               FontSize="13"
+                               Foreground="White"
+                               Grid.Row="3" />
 
-		<!-- Error Message -->
-		<TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontSize="12" />
+					<!-- Password Input -->
+					<TextBox Text="{Binding Password}"
+                             PasswordChar="•"
+                             Grid.Row="4" />
 
-		<!-- Sign In Button -->
-		<Button Content="Sign in"
-                Command="{Binding LoginCommand}" />
+					<!-- Remember Me -->
+					<CheckBox Content="Remember me"
+                              Foreground="White"
+                              Grid.Row="5" />
 
-		<!-- Bottom Links -->
-		<Grid Margin="0,20,0,0">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
+					<!-- Error Message -->
+					<TextBlock Text="{Binding ErrorMessage}"
+                               Foreground="Red"
+                               FontSize="12"
+                               Grid.Row="6" />
 
-			<!-- Help link -->
-			<TextBlock Grid.Column="0"
-                       HorizontalAlignment="Left"
-                       FontSize="12">
-				<Run Text="Help? " />
-				<TextBlock Text="I can't sign in"
-                           Cursor="Hand"
-                           TextDecorations="Underline"
-                           PointerPressed="OnForgotPasswordLinkClicked" />
-			</TextBlock>
+					<!-- Sign In Button -->
+					<Button Content="Sign in"
+                            Command="{Binding LoginCommand}"
+                            Width="180"
+                            Height="36"
+                            HorizontalAlignment="Center"
+                            Grid.Row="7" />
 
-			<!-- Register link -->
-			<TextBlock Grid.Column="1"
-                       HorizontalAlignment="Right"
-                       FontSize="12">
-				<Run Text="Don't have an account? " />
-				<TextBlock Text="Register"
-                           Cursor="Hand"
-                           TextDecorations="Underline"
-                           PointerPressed="OnRegisterLinkClicked" />
-			</TextBlock>
+					<!-- Bottom Links -->
+					<Grid Grid.Row="8" ColumnDefinitions="*,*">
+						<TextBlock Grid.Column="0"
+                                   FontSize="12"
+                                   Foreground="LightGray">
+							<Run Text="Help? " />
+							<TextBlock Text="I can't sign in"
+                                       Classes="link"
+                                       PointerPressed="OnForgotPasswordLinkClicked" />
+						</TextBlock>
+
+						<TextBlock Grid.Column="1"
+                                   FontSize="12"
+                                   HorizontalAlignment="Right"
+                                   Foreground="LightGray">
+							<Run Text="No account? " />
+							<TextBlock Text="Register"
+                                       Classes="link"
+                                       PointerPressed="OnRegisterLinkClicked" />
+						</TextBlock>
+					</Grid>
+				</Grid>
+			</Border>
 		</Grid>
-
-	</StackPanel>
 	</Grid>
 </Window>

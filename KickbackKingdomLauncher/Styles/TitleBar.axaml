@@ -1,0 +1,41 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<!-- Base Title Bar Button Style -->
+	<Style Selector="Button.TitleBarButton">
+		<Setter Property="Template">
+			<ControlTemplate TargetType="Button">
+				<Border x:Name="FocusBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+					<ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Content="{TemplateBinding Content}" />
+				</Border>
+			</ControlTemplate>
+		</Setter>
+
+		<!-- Default Properties -->
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="Foreground" Value="White" />
+		<Setter Property="BorderBrush" Value="Transparent" />
+		<Setter Property="Width" Value="36" />
+		<Setter Property="Height" Value="36" />
+		<Setter Property="FontSize" Value="16" />
+		<Setter Property="FontWeight" Value="Bold" />
+		<Setter Property="Cursor" Value="Hand" />
+	</Style>
+	
+	<Style Selector="Button.TitleBarButton:pointerover /template/ #FocusBorder"
+		   x:SetterTargetType="Border">
+		<Setter Property="Background" Value="Transparent"/>
+	</Style>
+
+	<Style Selector="Button.TitleBarButton.Close:pointerover /template/ #FocusBorder"
+		   x:SetterTargetType="Border">
+		<Setter Property="Background" Value="#a34040"/>
+	</Style>
+
+
+</Styles>

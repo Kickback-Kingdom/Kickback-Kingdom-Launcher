@@ -1,0 +1,70 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Design="https://github.com/avaloniaui">
+
+	<Design.PreviewWith>
+		<StackPanel Orientation="Vertical" Spacing="10">
+			<TextBox Width="200" Text="Try selecting this text." />
+			<TextBox Width="200" Text="Normal TextBox" />
+			<TextBox Width="200" Text="Disabled TextBox" IsEnabled="False" />
+			<TextBox Width="200" Text="Read-Only TextBox" IsReadOnly="True" />
+		</StackPanel>
+	</Design.PreviewWith>
+
+	<!-- Base style (inherits Fluent template by default) -->
+	<Style Selector="TextBox">
+		<Setter Property="Background" Value="{DynamicResource PanelBackgroundBrush}" />
+		<Setter Property="Foreground" Value="White" />
+		<Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="CornerRadius" Value="6" />
+		<Setter Property="Padding" Value="8" />
+		<Setter Property="FontSize" Value="14" />
+		<Setter Property="CaretBrush" Value="White" />
+		<Setter Property="MinHeight" Value="36" />
+		<Setter Property="SelectionBrush" Value="DarkCyan" />
+		<Setter Property="SelectionForegroundBrush" Value="White" />
+	</Style>
+
+	<!-- Hover -->
+	<Style Selector="TextBox:pointerover">
+		<Setter Property="BorderBrush" Value="{DynamicResource SecondaryBrush}" />
+		<Setter Property="Foreground" Value="White" />
+	</Style>
+
+
+	<!-- Focused -->
+	<Style Selector="TextBox:focus-within">
+		<Setter Property="BorderBrush" Value="{DynamicResource SecondaryBrush}" />
+		<Setter Property="Foreground" Value="White" />
+	</Style>
+
+
+	<!-- Disabled -->
+	<Style Selector="TextBox:disabled">
+		<Setter Property="Foreground" Value="#888" />
+		<Setter Property="Background" Value="#2a2a2a" />
+		<Setter Property="BorderBrush" Value="#444" />
+	</Style>
+
+	<!-- Read-only -->
+	<Style Selector="TextBox[IsReadOnly=true]">
+		<Setter Property="Background" Value="#1f1f1f" />
+		<Setter Property="BorderBrush" Value="#555" />
+	</Style>
+	<!-- Override pointerover background and border resources used by Fluent visual states -->
+	<Style>
+		<Style.Resources>
+			<SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="{DynamicResource SecondaryColor}" />
+			<SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{DynamicResource SecondaryColor}" />
+			<SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="{DynamicResource PanelBackground}" />
+			<SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{DynamicResource PanelBackground}" />
+			<SolidColorBrush x:Key="TextControlForeground" Color="White" />
+			<SolidColorBrush x:Key="TextControlForegroundFocused" Color="White" />
+
+		</Style.Resources>
+	</Style>
+
+
+
+</Styles>
