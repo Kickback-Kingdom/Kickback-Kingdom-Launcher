@@ -68,8 +68,13 @@ namespace KickbackKingdomLauncher.Models.Tasks
             get => _estimatedTimeRemaining;
             set => this.RaiseAndSetIfChanged(ref _estimatedTimeRemaining, value);
         }
+        public void MarkComplete()
+        {
+            Progress = 100;
+            IsFailed = false;
+        }
 
-        public  void RunAsync(Func<Action<double>, Task> work)
+        public void RunAsync(Func<Action<double>, Task> work)
         {
             Task.Run(async () =>
             {

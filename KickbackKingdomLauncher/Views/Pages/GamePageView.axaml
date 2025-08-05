@@ -15,14 +15,25 @@
 
 			<TextBlock Text="{Binding Description}" Foreground="#dddddd" TextWrapping="Wrap"/>
 
+			<!-- Install button -->
 			<Button Content="Install"
-					IsVisible="{Binding NotInstalled}"
+					IsVisible="{Binding ShowInstall}"
 					Click="OnInstallClicked"/>
 
+			<!-- Installing button (disabled) -->
+			<Button Content="Installing"
+					IsVisible="{Binding IsInstalling}"
+					IsEnabled="False"/>
 
+			<!-- Play button -->
 			<Button Content="Play"
-					IsVisible="{Binding IsInstalled}" />
+					IsVisible="{Binding IsInstalled}"
+					Click="OnPlayClicked"/>
 
+			<!-- Uninstall button -->
+			<Button Content="Uninstall"
+					IsVisible="{Binding IsInstalled}"
+					Click="OnUninstallClicked"/>
 		</StackPanel>
 	</Border>
 </UserControl>

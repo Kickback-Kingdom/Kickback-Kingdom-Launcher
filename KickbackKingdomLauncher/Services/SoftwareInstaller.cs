@@ -28,6 +28,45 @@ namespace KickbackKingdomLauncher.Services
 
             return await LibraryService.GetManifestAsync(software.Software.Locator);
         }
+        public void InstallSoftwareAsync(SoftwareEntry softwareEntry)
+        {
+            var task = new TaskProgress
+            {
+                Software = softwareEntry,
+                TaskName = $"Installing {softwareEntry.Title}",
+                Type = TaskProgress.TaskType.Install,
+                Progress = 0,
+                IsFailed = false
+            };
+
+            task.RunAsync(async reportProgress =>
+            {
+                try
+                {
+                    var manifest = await GetManifestAsync(softwareEntry);
+
+                    var installPath = softwareEntry.InstallPath!;
+                    var progress = new Progress<double>(value => reportProgress(value));
+
+                    var success = await _installerService.InstallFromManifestAsync(manifest, installPath, progress);
+                    if (!success)
+                    {
+                        task.IsFailed = true;
+                        return;
+                    }
+
+                    softwareEntry.IsInstalled = true;
+                    reportProgress(1.0); // 100%
+                }
+                catch (Exception)
+                {
+                    task.IsFailed = true;
+                    throw;
+                }
+            });
+
+            TaskManager.Instance.AddTask(task);
+        }
 
         public async Task<bool> InstallSoftwareAsync(SoftwareEntry softwareEntry, TaskProgress taskProgress)
         {

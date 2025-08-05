@@ -13,7 +13,7 @@ namespace KickbackKingdom.API.Models
         {
             return $"https://kickback-kingdom.com/testData/gamefiles/" +
            $"{Uri.EscapeDataString(SoftwareId)}/" +
-           $"{Uri.EscapeDataString(file.RelativePath)}";
+           $"{file.RelativePath}";
 
         }
     }

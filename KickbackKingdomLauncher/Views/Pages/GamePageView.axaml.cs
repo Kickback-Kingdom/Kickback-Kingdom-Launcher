@@ -2,11 +2,14 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
+using KickbackKingdom.API.Models;
 using KickbackKingdomLauncher.Models.Software;
 using KickbackKingdomLauncher.ViewModels;
 using KickbackKingdomLauncher.ViewModels.Pages;
 using KickbackKingdomLauncher.ViewModels.Windows;
 using KickbackKingdomLauncher.Views.Windows;
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace KickbackKingdomLauncher.Views.Pages
@@ -31,7 +34,20 @@ namespace KickbackKingdomLauncher.Views.Pages
 
             await ShowInstallerAsync(vm.Software);
         }
+        private async void OnPlayClicked(object? sender, RoutedEventArgs e)
+        {
+            if (DataContext is not GamePageViewModel vm || vm.Software is null)
+                return;
 
+            vm.Software.Play();
+        }
+        private async void OnUninstallClicked(object? sender, RoutedEventArgs e)
+        {
+            if (DataContext is not GamePageViewModel vm || vm.Software is null)
+                return;
+
+            var success = vm.Software.Uninstall();
+        }
         public async Task ShowInstallerAsync(SoftwareEntry software)
         {
             var vm = new InstallerViewModel(software);

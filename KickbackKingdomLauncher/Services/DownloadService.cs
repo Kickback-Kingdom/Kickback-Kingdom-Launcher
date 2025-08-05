@@ -55,7 +55,8 @@ namespace KickbackKingdomLauncher.Services
                     overallProgress?.Report((double)downloadedBytes / totalBytes * 100);
                     continue;
                 }
-                var success = await DownloadToFileAsync(manifest.GetFileUrl(file), destPath, null, cancellationToken);
+                string url = manifest.GetFileUrl(file);
+                var success = await DownloadToFileAsync(url, destPath, null, cancellationToken);
                 if (!success)
                     return false;
 
@@ -67,7 +68,7 @@ namespace KickbackKingdomLauncher.Services
                 }
 
                 downloadedBytes += file.Size;
-                overallProgress?.Report((double)downloadedBytes / totalBytes * 100);
+                overallProgress?.Report((double)downloadedBytes / totalBytes);
             }
 
             return true;
@@ -119,7 +120,7 @@ namespace KickbackKingdomLauncher.Services
 
                     if (isContentLengthKnown && progress != null)
                     {
-                        double percent = (double)bytesDownloaded / totalBytes * 100;
+                        double percent = (double)bytesDownloaded / totalBytes;
                         progress.Report(percent);
                     }
                 }

@@ -128,12 +128,13 @@ namespace KickbackKingdomLauncher.ViewModels.Windows
             LoadLibraryAsync();
         }
 
-        private void CleanCompletedTasks()
+        public void CleanCompletedTasks()
         {
-            var finished = TaskManager.ActiveTasks.Where(t => t.Progress >= 100).ToList();
-            foreach (var task in finished)
+            return;
+            foreach (var task in TaskManager.ActiveTasks.Where(t => t.IsComplete).ToList())
                 TaskManager.ActiveTasks.Remove(task);
         }
+
         private async void LoadLibraryAsync()
         {
             try
@@ -148,6 +149,17 @@ namespace KickbackKingdomLauncher.ViewModels.Windows
                     SoftwareManager.Add(entry);
                 }
 
+                // Subscribe to installed changes after loading
+                foreach (var software in SoftwareManager.AllSoftware)
+                {
+                    software.WhenAnyValue(x => x.IsInstalled)
+                        .Subscribe(_ =>
+                        {
+                            this.RaisePropertyChanged(nameof(GroupedSoftwareFlat));
+                            this.RaisePropertyChanged(nameof(SelectedGroupSoftware));
+                        });
+                }
+
                 this.RaisePropertyChanged(nameof(GroupedSoftwareFlat));
 
                 SelectedListItem = SoftwareManager.AllSoftware
@@ -159,6 +171,7 @@ namespace KickbackKingdomLauncher.ViewModels.Windows
                 Debug.WriteLine($"Failed to load library: {ex.Message}");
             }
         }
+
 
     }
 }

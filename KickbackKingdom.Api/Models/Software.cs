@@ -16,5 +16,7 @@
         public SoftwareType Type { get; set; } = SoftwareType.Game;
         public string? IconUrl { get; set; }
         public string? BannerUrl { get; set; }
+        public string ExecutablePath { get; set; } = string.Empty;
+        public long RequiredSpace { get; set; } = 0L;
     }
 }

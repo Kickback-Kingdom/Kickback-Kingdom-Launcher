@@ -19,10 +19,23 @@ public class InstallerViewModel : ReactiveObject
     public SoftwareEntry Software { get; set; }
 
     private string _installPath = "";
-    private long _requiredSpace = 0L;
     private long _availableSpace;
     public ObservableCollection<VaultInfo> Vaults { get; }
     private VaultInfo _selectedVault;
+    public Interaction<Unit, Unit> RequestCloseWindow { get; } = new();
+
+    private long _requiredSpace = 0L;
+    public long RequiredSpace
+    {
+        get => _requiredSpace;
+        private set
+        {
+            this.RaiseAndSetIfChanged(ref _requiredSpace, value);
+            this.RaisePropertyChanged(nameof(HasEnoughSpace));
+            this.RaisePropertyChanged(nameof(SpaceRequiredFormatted));
+            this.RaisePropertyChanged(nameof(SpaceLeftAfterInstallFormatted));
+        }
+    }
 
     public VaultInfo SelectedVault
     {
@@ -55,6 +68,7 @@ public class InstallerViewModel : ReactiveObject
     public InstallerViewModel(SoftwareEntry software)
     {
         Software = software;
+        RequiredSpace = software.Software.RequiredSpace;
         Vaults = new ObservableCollection<VaultInfo>();
         RefreshVaults();
 
@@ -79,27 +93,10 @@ public class InstallerViewModel : ReactiveObject
 
                 Software.VaultId = SelectedVault.Id;
 
-                var task = new TaskProgress
-                {
-                    Software = Software,
-                    Type = TaskProgress.TaskType.Install,
-                    Progress = 0
-                };
-
-                TaskManager.Instance.ActiveTasks.Add(task);
-
                 var installer = new SoftwareInstaller();
+                installer.InstallSoftwareAsync(Software);
 
-                var success = await installer.InstallSoftwareAsync(software, task);
-
-                if (!success)
-                    task.IsFailed = true;
-
-                task.Progress = 100;
-
-                // Mark software as installed
-                Software.IsInstalled = success;
-
+                await RequestCloseWindow.Handle(Unit.Default);
             }
             catch (Exception ex)
             {
@@ -122,7 +119,6 @@ public class InstallerViewModel : ReactiveObject
         set => this.RaiseAndSetIfChanged(ref _installPath, value);
     }
 
-    public long RequiredSpace => _requiredSpace;
 
     public long AvailableSpace
     {

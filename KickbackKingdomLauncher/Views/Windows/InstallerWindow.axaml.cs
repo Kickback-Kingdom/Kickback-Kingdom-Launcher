@@ -38,6 +38,12 @@ public partial class InstallerWindow : WindowBase
                 await ErrorDialogHelper.ShowErrorAsync(this, interaction.Input);
                 interaction.SetOutput(Unit.Default);
             });
+
+            vm.RequestCloseWindow.RegisterHandler(interaction =>
+            {
+                Close(); // or Hide() if you prefer
+                interaction.SetOutput(Unit.Default);
+            });
         };
     }
 }
