@@ -14,6 +14,8 @@ namespace KickbackKingdomLauncher.Views.Windows
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContext = new MainViewModel();
             Debug.WriteLine("MainWindow initialized");
         }
 

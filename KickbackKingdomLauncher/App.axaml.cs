@@ -81,8 +81,6 @@ public partial class App : Application
         if (SessionManager.IsLoggedIn())
         {
             var mainWindow = new MainWindow();
-
-            mainWindow.DataContext = new MainViewModel();
             mainWindow.Show();       // Show the main window first
 
             if (desktop.MainWindow is LoginWindow loginWindow)
